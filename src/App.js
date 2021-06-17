@@ -9,30 +9,12 @@ class App extends React.Component {
     good: 0,
     neutral: 0,
     bad: 0,
-    total: 0,
-    positivePercentage: 0,
-    visible: false,
   };
 
-  goodIncrement = () => {
+  Increment = e => {
+    const name = e.target.name;
     this.setState(prevState => ({
-      good: prevState.good + 1,
-    }));
-    this.countTotalFeedback();
-    this.countPositiveFeedbackPercentage();
-    this.show();
-  };
-  neutralIncrement = () => {
-    this.setState(prevState => ({
-      neutral: prevState.neutral + 1,
-    }));
-    this.countTotalFeedback();
-    this.countPositiveFeedbackPercentage();
-    this.show();
-  };
-  badIncrement = () => {
-    this.setState(prevState => ({
-      bad: prevState.bad + 1,
+      [name]: prevState[name] + 1,
     }));
     this.countTotalFeedback();
     this.countPositiveFeedbackPercentage();
@@ -60,9 +42,8 @@ class App extends React.Component {
     return (
       <Section title="Please leave feedback">
         <FeedbackOptions
-          good={this.goodIncrement}
-          neutral={this.neutralIncrement}
-          bad={this.badIncrement}
+          options={['good', 'neutral', 'bad']}
+          onLeaveFeedback={this.Increment}
         />
         {(this.state.visible && (
           <Statistics
