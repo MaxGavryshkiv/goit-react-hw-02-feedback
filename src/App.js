@@ -18,24 +18,16 @@ class App extends React.Component {
     }));
     this.countTotalFeedback();
     this.countPositiveFeedbackPercentage();
-    this.show();
   };
   countTotalFeedback = () => {
-    this.setState(prevState => ({
-      total: prevState.good + prevState.neutral + prevState.bad,
-    }));
+    const { good, neutral, bad } = this.state;
+    let total = good + neutral + bad;
+    return total;
   };
   countPositiveFeedbackPercentage = () => {
-    this.setState(prevState => ({
-      positivePercentage:
-        ((prevState.good + prevState.neutral - prevState.bad) /
-          (prevState.good + prevState.neutral + prevState.bad)) *
-        100,
-    }));
-  };
+    const { good, neutral, bad } = this.state;
 
-  show = () => {
-    this.setState({ visible: true });
+    return ((good + neutral - bad) / (good + neutral + bad)) * 100;
   };
 
   render() {
@@ -45,15 +37,17 @@ class App extends React.Component {
           options={['good', 'neutral', 'bad']}
           onLeaveFeedback={this.Increment}
         />
-        {(this.state.visible && (
+        {(this.countTotalFeedback() === 0 && (
+          <Notification message="No feedback given" />
+        )) || (
           <Statistics
             good={this.state.good}
             neutral={this.state.neutral}
             bad={this.state.bad}
-            total={this.state.total}
-            positivePercentage={this.state.positivePercentage}
+            total={this.countTotalFeedback()}
+            positivePercentage={this.countPositiveFeedbackPercentage()}
           />
-        )) || <Notification message="No feedback given" />}
+        )}
       </Section>
     );
   }
